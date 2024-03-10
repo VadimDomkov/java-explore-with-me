@@ -29,6 +29,7 @@ public class StatServiceImpl implements StatService {
     @Override
     public List<StatResponseDto> getStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (uris == null) {
+            log.info("uris is null");
             return unique ? repository.getAllUniqueStats(start, end) : repository.getAllStats(start, end);
         }
         return unique ? repository.getUniqueStatsByUris(start, end, uris) : repository.getStatsByUris(start, end, uris);
