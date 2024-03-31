@@ -35,6 +35,17 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleForbiddenException(final ForbiddenException e) {
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason("For the requested operation the conditions are not met.")
+                .status(HttpStatus.CONFLICT.toString())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleDataIntegrityViolationException(final DataIntegrityViolationException e) {
         return ApiError.builder()
                 .message(e.getMessage())
