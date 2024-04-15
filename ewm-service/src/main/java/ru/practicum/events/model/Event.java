@@ -32,7 +32,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    private Long confirmedRequests;
+    private long confirmedRequests;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
@@ -65,7 +65,7 @@ public class Event {
     private String title;
 
     @Column
-    private Long views;
+    private long views;
 
     @ManyToMany
     @JoinTable(name = "compilation_to_event",

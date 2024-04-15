@@ -9,6 +9,7 @@ import ru.practicum.compilations.dao.CompilationRepository;
 import ru.practicum.compilations.dto.CompilationDto;
 import ru.practicum.compilations.dto.CompilationMapper;
 import ru.practicum.compilations.dto.NewCompilationDto;
+import ru.practicum.compilations.dto.UpdateCompilationDto;
 import ru.practicum.compilations.model.Compilation;
 import ru.practicum.events.dao.EventRepository;
 import ru.practicum.events.dto.EventMapper;
@@ -48,17 +49,18 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Transactional(readOnly = false)
     @Override
-    public CompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
+    public CompilationDto updateCompilation(Long compId, UpdateCompilationDto newCompilationDto) {
         Compilation compilation = checkCompilation(compId);
         if (newCompilationDto.getEvents() != null) {
-            compilation.setEvents(compilation.getEvents());
+            compilation.setEvents(
+                    eventRepository.findAllByIdIn(newCompilationDto.getEvents())
+            );
         }
         if (newCompilationDto.getTitle() != null) {
             compilation.setTitle(newCompilationDto.getTitle());
         }
-        if (newCompilationDto.getPinned() != null) {
-            compilation.setPinned(newCompilationDto.getPinned());
-        }
+        compilation.setPinned(newCompilationDto.isPinned());
+
         return compilationMapper.compilationToDto(compilationRepository.save(compilation));
     }
 

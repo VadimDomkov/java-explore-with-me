@@ -2,7 +2,6 @@ package ru.practicum.events.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +9,12 @@ import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.dto.UpdateEventDto;
-import ru.practicum.events.model.EventState;
 import ru.practicum.events.service.EventService;
-import ru.practicum.users.service.UserService;
+import ru.practicum.requests.dto.ParticipationRequestUpdateDto;
+import ru.practicum.requests.dto.ParticipationRequestsDto;
+import ru.practicum.requests.dto.ParticipationStatusDto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -52,5 +50,17 @@ public class PrivateEventsController {
     public EventFullDto updateUserEvent(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody @Valid UpdateEventDto dto) {
         log.info("PATCH to /users/{}/events/{}", userId, eventId);
         return eventService.updateUserEvent(userId, eventId, dto);
+    }
+
+    @GetMapping(path = "/{userId}/events/{eventId}/requests")
+    List<ParticipationRequestsDto> getRequestsToUserEvents(@PathVariable Long userId, @PathVariable Long eventId) {
+        log.info("GET to /users/{}/events/{}/requests", userId, eventId);
+        return eventService.getRequestsToUserEvents(userId, eventId);
+    }
+
+    @PatchMapping(path = "/{userId}/events/{eventId}/requests")
+    public ParticipationStatusDto updateRequestState(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody @Valid ParticipationRequestUpdateDto dto) {
+        log.info("PATCH to /users/{}/events/{}/requests", userId, eventId);
+        return eventService.updateRequestState(userId, eventId, dto);
     }
 }

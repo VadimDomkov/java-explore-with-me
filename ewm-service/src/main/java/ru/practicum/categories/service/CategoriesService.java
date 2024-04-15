@@ -6,13 +6,13 @@ import ru.practicum.categories.dto.NewCategoryDto;
 import java.util.List;
 
 public interface CategoriesService {
-    public CategoryDto createCategory(NewCategoryDto newCategoryDto);
+    CategoryDto createCategory(NewCategoryDto newCategoryDto);
 
-    public void deleteCategory(Long catId);
+    void deleteCategory(Long catId);
 
-    public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto);
+    CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto);
 
-    public List<CategoryDto> getCategories(Integer from, Integer size);
+    List<CategoryDto> getCategories(Integer from, Integer size);
 
-    public CategoryDto getCategoryById(Long catId);
+    CategoryDto getCategoryById(Long catId);
 }

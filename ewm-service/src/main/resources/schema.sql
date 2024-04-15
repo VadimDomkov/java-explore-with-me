@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS events (
     confirmed_requests INTEGER,
     created_on TIMESTAMP,
     description VARCHAR,
-    event_date TIMESTAMP NOT NULL,
+    event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     initiator BIGINT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     location BIGINT NOT NULL REFERENCES locations(id) ON UPDATE CASCADE ON DELETE CASCADE,
     paid BOOLEAN NOT NULL,

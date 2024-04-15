@@ -2,7 +2,6 @@ package ru.practicum.categories.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,9 @@ import ru.practicum.categories.dto.CategoriesMapper;
 import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.dto.NewCategoryDto;
 import ru.practicum.categories.model.Category;
+import ru.practicum.events.dao.EventRepository;
 import ru.practicum.exceptions.EntityNotFoundException;
+import ru.practicum.exceptions.ForbiddenException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository categoriesRepository;
     private final CategoriesMapper categoriesMapper;
+    private final EventRepository eventRepository;
 
     @Transactional(readOnly = false)
     @Override
@@ -39,6 +41,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public void deleteCategory(Long catId) {
         checkCategory(catId);
+        if (eventRepository.existsByCategoryId(catId)) {
+            throw new ForbiddenException("У категории есть связанные события");
+        }
         categoriesRepository.deleteById(catId);
     }
 
@@ -46,9 +51,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
         Category category = checkCategory(catId);
-        if (category.getName().equals(newCategoryDto.getName())) {
-            throw new DataIntegrityViolationException("Категория с таким именем уже существует");
-        }
+
         category.setName(newCategoryDto.getName());
         return categoriesMapper.catToDto(categoriesRepository.save(category));
     }
