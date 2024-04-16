@@ -10,7 +10,6 @@ import ru.practicum.compilations.model.Compilation;
 import ru.practicum.users.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
