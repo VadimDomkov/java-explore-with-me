@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.StatRequestDto;
+import ru.practicum.StatsClient;
 import ru.practicum.categories.dao.CategoriesRepository;
 import ru.practicum.categories.dto.CategoriesMapper;
 import ru.practicum.events.dao.EventRepository;
@@ -27,7 +29,9 @@ import ru.practicum.requests.model.RequestState;
 import ru.practicum.users.dao.UsersRepository;
 import ru.practicum.users.model.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +49,7 @@ public class EventServiceImpl implements EventService {
     private final CategoriesMapper categoriesMapper;
     private final RequestRepository requestRepository;
     private final ParticipationRequestMapper requestMapper;
+    private final StatsClient statsClient;
 
     @Override
     public List<EventShortDto> getUserEvents(Long userId, int from, int size) {
@@ -348,12 +353,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventById(Long id) {
+    public EventFullDto getEventById(Long id, HttpServletRequest httpServletRequest) {
         Event event = checkEvent(id);
 
         if (event.getState() != EventState.PUBLISHED) {
             throw new EntityNotFoundException(String.format("Событие с id %d не найдено", id));
         }
+
+        statsClient.addRequest(StatRequestDto.builder()
+                .ip(httpServletRequest.getRemoteAddr())
+                .app("ewm-service")
+                .uri(httpServletRequest.getRequestURI())
+                .timestamp(LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
+                .build());
 
         event.setViews(event.getViews() + 1);
         return eventMapper.eventToFullDto(eventRepository.save(event));

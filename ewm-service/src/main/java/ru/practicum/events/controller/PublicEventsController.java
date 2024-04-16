@@ -8,6 +8,7 @@ import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,8 +37,8 @@ public class PublicEventsController {
 
 
     @GetMapping(path = "/{id}")
-    EventFullDto getEventById(@PathVariable Long id) {
+    EventFullDto getEventById(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         log.info("GET to /events/{}", id);
-        return eventService.getEventById(id);
+        return eventService.getEventById(id, httpServletRequest);
     }
 }
