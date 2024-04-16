@@ -24,11 +24,24 @@ services:
       - POSTGRES_PASSWORD=pass
 
   ewm-service:
-    build: ewm-service
+    build: ./ewm-service
     image: ewm-service
     container_name: ewm-service
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm_db
+      - SPRING_DATASOURCE_USER=ewm
+      - SPRING_DATASOURCE_PASSWORD=pass
 
   ewm-db:
     image: postgres:14-alpine
+    container_name: ewm_db
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_DB=ewm_db
+      - POSTGRES_USER=ewm
+      - POSTGRES_PASSWORD=pass
