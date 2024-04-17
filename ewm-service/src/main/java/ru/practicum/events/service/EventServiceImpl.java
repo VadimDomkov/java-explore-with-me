@@ -360,11 +360,13 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException(String.format("Событие с id %d не найдено", id));
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         statsClient.addRequest(StatRequestDto.builder()
                 .ip(httpServletRequest.getRemoteAddr())
                 .app("ewm-service")
                 .uri(httpServletRequest.getRequestURI())
-                .timestamp(LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
+                .timestamp(LocalDateTime.now().format(formatter))
                 .build());
 
         event.setViews(event.getViews() + 1);
