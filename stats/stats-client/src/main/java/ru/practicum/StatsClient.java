@@ -9,13 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
 public class StatsClient {
     private WebClient webClient;
 
     @Autowired
     public StatsClient() {
-        webClient = WebClient.create("(http://localhost:9090");
+        webClient = WebClient.create("http://localhost:9090");
     }
 
     public void addRequest(StatRequestDto requestDto) {
