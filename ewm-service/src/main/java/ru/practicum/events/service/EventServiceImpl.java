@@ -366,7 +366,7 @@ public class EventServiceImpl implements EventService {
                 .ip(httpServletRequest.getRemoteAddr())
                 .app("ewm-service")
                 .uri(httpServletRequest.getRequestURI())
-                .timestamp(LocalDateTime.now().format(formatter))
+                .timestamp(LocalDateTime.now())
                 .build());
 
         event.setViews(event.getViews() + 1);
