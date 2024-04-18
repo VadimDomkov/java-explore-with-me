@@ -243,6 +243,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size, HttpServletRequest httpServletRequest) {
+        if (rangeStart == null) {
+            rangeStart = LocalDateTime.now();
+        }
         if ((rangeStart != null && rangeEnd != null) && rangeStart.isAfter(rangeEnd)) {
             throw new BadArgumentsException("Дата окончания должна быть позже даты начала");
         }
