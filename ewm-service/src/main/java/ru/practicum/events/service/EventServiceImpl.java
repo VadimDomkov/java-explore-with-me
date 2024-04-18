@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatRequestDto;
 import ru.practicum.StatsClient;
 import ru.practicum.categories.dao.CategoriesRepository;
-import ru.practicum.categories.dto.CategoriesMapper;
 import ru.practicum.events.dao.EventRepository;
 import ru.practicum.events.dao.LocationRepository;
 import ru.practicum.events.dto.*;
@@ -31,7 +30,6 @@ import ru.practicum.users.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
