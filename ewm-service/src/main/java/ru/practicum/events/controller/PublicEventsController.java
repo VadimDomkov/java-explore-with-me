@@ -29,10 +29,11 @@ public class PublicEventsController {
                                                @RequestParam(required = false) Boolean onlyAvailable,
                                                @RequestParam(required = false) String sort,
                                                @Min(0) @RequestParam(defaultValue = "0") int from,
-                                               @Min(1) @RequestParam(defaultValue = "10") int size) {
+                                               @Min(1) @RequestParam(defaultValue = "10") int size,
+                                               HttpServletRequest httpServletRequest) {
 
         log.info("GET to /events");
-        return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, httpServletRequest);
     }
 
 

@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,8 @@ import java.util.List;
 public class StatsClient {
     private WebClient webClient;
 
-    @Autowired
-    public StatsClient() {
-        webClient = WebClient.create("http://localhost:9090");
+    public StatsClient(@Value("${stats-server.url}") String url) {
+        webClient = WebClient.create(url);
     }
 
     public void addRequest(StatRequestDto requestDto) {

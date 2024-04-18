@@ -46,7 +46,6 @@ public class EventServiceImpl implements EventService {
     private final UsersRepository usersRepository;
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
-    private final CategoriesMapper categoriesMapper;
     private final RequestRepository requestRepository;
     private final ParticipationRequestMapper requestMapper;
     private final StatsClient statsClient;
@@ -245,7 +244,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
+    public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size, HttpServletRequest httpServletRequest) {
         if ((rangeStart != null && rangeEnd != null) && rangeStart.isAfter(rangeEnd)) {
             throw new BadArgumentsException("Дата окончания должна быть позже даты начала");
         }
@@ -269,6 +268,13 @@ public class EventServiceImpl implements EventService {
         List<EventShortDto> dtos = eventList.stream()
                 .map(event -> eventMapper.eventToShortDto(event))
                 .collect(Collectors.toList());
+
+        statsClient.addRequest(StatRequestDto.builder()
+                .ip(httpServletRequest.getRemoteAddr())
+                .app("ewm-service")
+                .uri(httpServletRequest.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build());
 
         return dtos;
     }
@@ -359,8 +365,6 @@ public class EventServiceImpl implements EventService {
         if (event.getState() != EventState.PUBLISHED) {
             throw new EntityNotFoundException(String.format("Событие с id %d не найдено", id));
         }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         statsClient.addRequest(StatRequestDto.builder()
                 .ip(httpServletRequest.getRemoteAddr())
