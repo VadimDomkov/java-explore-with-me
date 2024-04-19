@@ -1,10 +1,7 @@
 package ru.practicum.events.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.events.model.StateAction;
 
 import javax.validation.constraints.Future;
@@ -13,7 +10,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEventDto {

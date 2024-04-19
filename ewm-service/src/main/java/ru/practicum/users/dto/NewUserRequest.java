@@ -1,14 +1,16 @@
 package ru.practicum.users.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Builder
-@Data
+@Setter
+@Getter
 public class NewUserRequest {
     @Email
     @NotBlank
