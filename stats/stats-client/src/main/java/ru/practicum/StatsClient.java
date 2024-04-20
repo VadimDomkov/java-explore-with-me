@@ -1,6 +1,6 @@
 package ru.practicum;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,9 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StatsClient {
-    private final WebClient webClient;
+    private WebClient webClient;
+
+    public StatsClient(@Value("${stats-server.url}") String url) {
+        webClient = WebClient.create(url);
+    }
 
     public void addRequest(StatRequestDto requestDto) {
         webClient.post()
