@@ -56,9 +56,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = false)
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = checkComment(commentId);
-        if (comment.getAuthor().getId() != userId) {
-            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
-        }
+        checkAuthor(comment.getAuthor().getId(), userId);
+//        if (comment.getAuthor().getId() != userId) {
+//            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
+//        }
         commentRepository.deleteById(commentId);
     }
 
@@ -66,9 +67,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = false)
     public CommentResponseDto updateComment(CommentRequestDto requestDto, Long commentId, Long userId, Evaluation evaluation) {
         Comment comment = checkComment(commentId);
-        if (comment.getAuthor().getId() != userId) {
-            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
-        }
+        checkAuthor(comment.getAuthor().getId(), userId);
+//        if (comment.getAuthor().getId() != userId) {
+//            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
+//        }
         comment.setText(requestDto.getText());
         if (evaluation != null) {
             comment.setEvaluation(evaluation);
@@ -116,6 +118,12 @@ public class CommentServiceImpl implements CommentService {
     private User checkUser(Long userId) {
         return usersRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователя с id %d не найдено", userId)));
+    }
+
+    private void checkAuthor(long commentId, long authorId) {
+        if (commentId != authorId) {
+            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, authorId));
+        }
     }
 
     private Event checkEvent(Long eventId) {
