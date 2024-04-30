@@ -793,7 +793,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/comments/events/99?evaluation=POSITIVE&userId=1",
+							"raw": "{{baseUrl}}/comments/events/999?evaluation=POSITIVE&userId=1",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -847,7 +847,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/comments/events/1?evaluation=POSITIVE&userId=99",
+							"raw": "{{baseUrl}}/comments/events/1?evaluation=POSITIVE&userId=999",
 							"host": [
 								"{{baseUrl}}"
 							],
