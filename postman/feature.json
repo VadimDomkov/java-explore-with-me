@@ -546,7 +546,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/comments/users/1?evaluation=POSITIVE",
+							"raw": "{{baseUrl}}/comments/users/1?evaluation=NEGATIVE",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -558,7 +558,7 @@
 							"query": [
 								{
 									"key": "evaluation",
-									"value": "POSITIVE"
+									"value": "NEGATIVE"
 								}
 							]
 						}
