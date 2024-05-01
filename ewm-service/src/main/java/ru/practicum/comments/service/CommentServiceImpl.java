@@ -47,9 +47,7 @@ public class CommentServiceImpl implements CommentService {
                 .published(LocalDateTime.now())
                 .build();
 
-        Comment saved = commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = commentMapper.commentToResponseDto(saved);
-        return commentResponseDto;
+        return commentMapper.commentToResponseDto(commentRepository.save(comment));
     }
 
     @Override
@@ -57,9 +55,6 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = checkComment(commentId);
         checkAuthor(comment.getAuthor().getId(), userId);
-//        if (comment.getAuthor().getId() != userId) {
-//            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
-//        }
         commentRepository.deleteById(commentId);
     }
 
@@ -68,9 +63,6 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponseDto updateComment(CommentRequestDto requestDto, Long commentId, Long userId, Evaluation evaluation) {
         Comment comment = checkComment(commentId);
         checkAuthor(comment.getAuthor().getId(), userId);
-//        if (comment.getAuthor().getId() != userId) {
-//            throw new EntityNotFoundException(String.format("Комментарий с id %d не принадлежит пользователю %d", commentId, userId));
-//        }
         comment.setText(requestDto.getText());
         if (evaluation != null) {
             comment.setEvaluation(evaluation);
