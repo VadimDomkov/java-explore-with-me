@@ -111,20 +111,9 @@ public class EventServiceImpl implements EventService {
         if (event.getState().equals(EventState.PUBLISHED)) {
             throw new ForbiddenException("Only pending or canceled events can be changed");
         }
-        if (dto.getAnnotation() != null) {
-            event.setAnnotation(dto.getAnnotation());
-        }
-        if (dto.getCategory() != null) {
-            event.setCategory(
-                    categoriesRepository.findById(dto.getCategory())
-                            .orElseThrow(() -> new EntityNotFoundException(String.format("Категории с id %d не найдено", dto.getCategory()))));
-        }
-        if (dto.getDescription() != null) {
-            event.setDescription(dto.getDescription());
-        }
-        if (dto.getEventDate() != null) {
-            event.setEventDate(dto.getEventDate());
-        }
+
+        updateFields(event, dto);
+
         if (dto.getLocation() != null) {
             event.setLocation(
                     locationRepository.findLocationByLatAndLon(
@@ -133,23 +122,13 @@ public class EventServiceImpl implements EventService {
                     ).orElseThrow(() -> new EntityNotFoundException("Локация не найдена")
                     ));
         }
-        if (dto.getPaid() != null) {
-            event.setPaid(dto.getPaid());
-        }
-        if (dto.getParticipantLimit() != null) {
-            event.setParticipantLimit(dto.getParticipantLimit());
-        }
-        if (dto.getRequestModeration() != null) {
-            event.setRequestModeration(dto.getRequestModeration());
-        }
+
         if (dto.getStateAction() != null) {
             event.setState(
                     dto.getStateAction() == StateAction.CANCEL_REVIEW ? EventState.CANCELED : EventState.PENDING
             );
         }
-        if (dto.getTitle() != null) {
-            event.setTitle(dto.getTitle());
-        }
+
         event.setPublishedOn(LocalDateTime.now());
         return eventMapper.eventToFullDto(eventRepository.save(event));
     }
@@ -162,10 +141,6 @@ public class EventServiceImpl implements EventService {
         }
         Pageable pageable = PageRequest.of(from / size, size);
         List<Event> events;
-
-        boolean isIds = ids != null ? true : false;
-        boolean isStates = states != null ? true : false;
-        boolean isCategories = categories != null ? true : false;
 
         events = eventRepository.findAllByParameters(ids, states, categories, rangeStart, rangeEnd, pageable);
 
@@ -185,20 +160,8 @@ public class EventServiceImpl implements EventService {
             throw new BadArgumentsException("Время события не может быть в прошлом");
         }
 
-        if (dto.getAnnotation() != null) {
-            event.setAnnotation(dto.getAnnotation());
-        }
-        if (dto.getCategory() != null) {
-            event.setCategory(
-                    categoriesRepository.findById(dto.getCategory())
-                            .orElseThrow(() -> new EntityNotFoundException(String.format("Категории с id %d не найдено", dto.getCategory()))));
-        }
-        if (dto.getDescription() != null) {
-            event.setDescription(dto.getDescription());
-        }
-        if (dto.getEventDate() != null) {
-            event.setEventDate(dto.getEventDate());
-        }
+        updateFields(event, dto);
+
         if (dto.getLocation() != null) {
             event.setLocation(
                     locationRepository.findLocationByLatAndLon(
@@ -206,15 +169,7 @@ public class EventServiceImpl implements EventService {
                             dto.getLocation().getLon()
                     ).orElse(locationRepository.save(locationMapper.dtoToLocation(dto.getLocation()))));
         }
-        if (dto.getPaid() != null) {
-            event.setPaid(dto.getPaid());
-        }
-        if (dto.getParticipantLimit() != null) {
-            event.setParticipantLimit(dto.getParticipantLimit());
-        }
-        if (dto.getRequestModeration() != null) {
-            event.setRequestModeration(dto.getRequestModeration());
-        }
+
         if (dto.getStateAction() != null) {
             switch (dto.getStateAction()) {
                 case SEND_TO_REVIEW:
@@ -234,9 +189,6 @@ public class EventServiceImpl implements EventService {
                     break;
             }
         }
-        if (dto.getTitle() != null) {
-            event.setTitle(dto.getTitle());
-        }
 
         return eventMapper.eventToFullDto(eventRepository.save(event));
     }
@@ -246,7 +198,7 @@ public class EventServiceImpl implements EventService {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
-        if ((rangeStart != null && rangeEnd != null) && rangeStart.isAfter(rangeEnd)) {
+        if ((rangeEnd != null) && rangeStart.isAfter(rangeEnd)) {
             throw new BadArgumentsException("Дата окончания должна быть позже даты начала");
         }
         Pageable pageable;
@@ -386,5 +338,35 @@ public class EventServiceImpl implements EventService {
     private Event checkEvent(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("События с id %d не найдено", eventId)));
+    }
+
+    private void updateFields(Event event, UpdateEventDto dto) {
+
+        if (dto.getAnnotation() != null) {
+            event.setAnnotation(dto.getAnnotation());
+        }
+        if (dto.getCategory() != null) {
+            event.setCategory(
+                    categoriesRepository.findById(dto.getCategory())
+                            .orElseThrow(() -> new EntityNotFoundException(String.format("Категории с id %d не найдено", dto.getCategory()))));
+        }
+        if (dto.getDescription() != null) {
+            event.setDescription(dto.getDescription());
+        }
+        if (dto.getEventDate() != null) {
+            event.setEventDate(dto.getEventDate());
+        }
+        if (dto.getPaid() != null) {
+            event.setPaid(dto.getPaid());
+        }
+        if (dto.getParticipantLimit() != null) {
+            event.setParticipantLimit(dto.getParticipantLimit());
+        }
+        if (dto.getRequestModeration() != null) {
+            event.setRequestModeration(dto.getRequestModeration());
+        }
+        if (dto.getTitle() != null) {
+            event.setTitle(dto.getTitle());
+        }
     }
 }

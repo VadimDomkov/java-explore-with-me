@@ -1,10 +1,7 @@
 package ru.practicum.events.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.categories.model.Category;
 import ru.practicum.compilations.model.Compilation;
 import ru.practicum.users.model.User;
@@ -17,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "events")
 public class Event {

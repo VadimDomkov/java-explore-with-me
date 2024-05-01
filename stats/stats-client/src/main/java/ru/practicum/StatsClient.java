@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class StatsClient {
-    private WebClient webClient;
+    private final WebClient webClient;
 
     public StatsClient(@Value("${stats-server.url}") String url) {
         webClient = WebClient.create(url);
